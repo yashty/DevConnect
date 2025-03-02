@@ -1,4 +1,5 @@
 const express = require("express");
+const { adminAuth } = require("./middlewares/auth");
 
 const app = express();
 
@@ -6,8 +7,8 @@ app.get("/", (req, res) => {
   res.send("Hello from server!");
 });
 
-app.get("/test", (req, res) => {
-  res.send("Hello from test server!");
+app.get("/admin/getAllData", adminAuth, (req, res) => {
+  res.send("All data Fetched.");
 });
 
 app.listen(3000, () => {
