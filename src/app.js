@@ -33,9 +33,59 @@ app.post("/signup", async (req, res) => {
   }
 });
 
-// app.get("/admin/getAllData", adminAuth, (req, res) => {
-//   res.send("All data Fetched.");
-// });
+app.get("/user", async (req, res) => {
+  const userEmail = req.body.emailId;
+
+  try {
+    const user = await User.find({ emailId: userEmail });
+
+    if (!user) {
+      return res.status(404).json({ msg: "User not found" });
+    }
+
+    res.status(200).json({ msg: "User fetched successfully", user });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ msg: "Something went wrong." });
+  }
+});
+
+app.get("/feed", async (req, res) => {
+  try {
+    const user = await User.find({});
+    if (!user) {
+      return res.status(404).json({ msg: "Users not found" });
+    }
+
+    res.status(200).json({ msg: "Users fetched successfully", user });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ msg: "Something went wrong." });
+  }
+});
+
+app.delete("/user", async (req, res) => {
+  const userId = req.body.userId;
+  try {
+    const user = await User.findByIdAndDelete(userId);
+    res.status(200).json({ msg: "User deleted successfully.", user });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ msg: "Something went wrong." });
+  }
+});
+
+app.patch("/user", async (req, res) => {
+  const userId = req.body.userId;
+  const data = req.body;
+  try {
+    const user = await User.findByIdAndUpdate({ _id: userId }, data);
+    res.status(200).json({ msg: "User updated successfully." });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ msg: "Something went wrong." });
+  }
+});
 
 connectDB()
   .then(() => {
